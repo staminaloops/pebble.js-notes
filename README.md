@@ -1,14 +1,16 @@
 # pebble.js-notes
 
-## Window
+## 1. Window
 
 `Window` is the basic building block in your Pebble.js application. All windows share some common properties and methods.
 
-Pebble.js provides three types of Windows:
+Pebble.js provides 3 types of Windows:
 
- * [Card]: Displays a title, a subtitle, a banner image and text on a screen. The position of the elements are fixed and cannot be changed.
- * [Menu]: Displays a menu on the Pebble screen. This is similar to the standard system menu in Pebble.
- * [Window]: The Window by itself is the most flexible. It allows you to add different [Element]s ([Circle], [Image], [Rect], [Text], [TimeText]) and to specify a position and size for each of them. You can also animate them.
+ * **[Card]**: Displays a title, a subtitle, a banner image and text on a screen. The position of the elements are fixed and cannot be changed.
+ * **[Menu]**: Displays a menu on the Pebble screen. This is similar to the standard system menu in Pebble.
+ * **[Window]**: The Window by itself is the most flexible. It allows you to add different **[Element]s** (*[Circle]*, *[Image]*, *[Rect]*, *[Text]*, *[TimeText]*) and to specify a *position* and *size* for each of them. You can also *animate them*.
+
+### 1.1 Common Window properties and methods
 
 | Name           | Type      | Default   | Description                                                                                     |
 | ----           | :-------: | --------- | -------------                                                                                   |
@@ -134,9 +136,9 @@ card.action('up', 'images/action_icon_plus.png');
 
 Accessor to the `fullscreen` property. See [Window].
 
-### Window (dynamic)
+### 1.1 Properties and methods just for the Window type (dynamic)
 
-A [Window] instantiated directly is a dynamic window that can display a completely customizable user interface on the screen. Dynamic windows are initialized empty and will need [Element]s added to it. [Card] and [Menu] will not display elements added to them in this way.
+A [Window] instantiated directly is a dynamic window that can display a completely customizable user interface on the screen. Dynamic windows are **initialized empty and will need [Element]s added to it**. [Card] and [Menu] will not display elements added to them in this way.
 
 ````js
 // Create a dynamic window
@@ -174,141 +176,12 @@ wind.each(function(element) {
   console.log('Element: ' + JSON.stringify(element));
 });
 ````
-## There are type of Windows:
 
-### Card
-
-A Card is a type of [Window] that allows you to display a title, a subtitle, an image and a body on the screen of Pebble.
-
-Just like any window, you can initialize a Card by passing an object to the constructor or by calling accessors to change the properties.
-
-````js
-var card = new UI.Card({
-  title: 'Hello People!'
-});
-card.body('This is the content of my card!');
-````
-
-The properties available on a [Card] are:
-
-| Name         | Type      | Default   | Description                                                                                                                                                          |
-| ----         | :-------: | --------- | -------------                                                                                                                                                        |
-| `title`      | string    | ""        | Text to display in the title field at the top of the screen                                                                                                          |
-| `subtitle`   | string    | ""        | Text to display below the title                                                                                                                                      |
-| `body`       | string    | ""        | Text to display in the body field.                                                                                                                                   |
-| `icon`       | Image     | null      | An image to display before the title text. Refer to [Using Images] for instructions on how to include images in your app.                                                                     |
-| `subicon`    | Image     | null      | An image to display before the subtitle text. Refer to [Using Images] for instructions on how to include images in your app.                                                                     |
-| `banner`     | Image     | null      | An image to display in the center of the screen. Refer to [Using Images] for instructions on how to include images in your app.                                                                     |
-| `scrollable` | boolean   | false     | Whether the user can scroll this card with the up and down button. When this is enabled, single and long click events on the up and down button will not be transmitted to your app. |
-| `style`      | string    | "small"   | Selects the font used to display the body. This can be 'small', 'large' or 'mono'                                                                                    |
-
-The small and large styles correspond to the system notification styles. Mono sets a monospace font for the body textfield, enabling more complex text UIs or ASCII art.
-
-Note that all fields will automatically span multiple lines if needed and that you can '\n' to insert line breaks.
-
-### Menu
-
-A menu is a type of [Window] that displays a standard Pebble menu on the screen of Pebble.
-
-Just like any window, you can initialize a Menu by passing an object to the constructor or by calling accessors to change the properties.
-
-The properties available on a [Menu] are:
-
-| Name                        | Type    | Default | Description |
-| ----                        |:-------:|---------|-------------|
-| `sections`                  | Array   | `[]`    | A list of all the sections to display.            |
-| `backgroundColor`           | Color   | `white` | The background color of a menu item.              |
-| `textColor`                 | Color   | `black` | The text color of a menu item.                    |
-| `highlightBackgroundColor`  | Color   | `black` | The background color of a selected menu item.     |
-| `highlightTextColor`        | Color   | `white` | The text color of a selected menu item.           |
-
-A menu contains one or more sections. Each section has a title and contains zero or more items. An item must have a title. It can also have a subtitle and an icon.
-
-````js
-var menu = new UI.Menu({
-  backgroundColor: 'black',
-  textColor: 'blue',
-  highlightBackgroundColor: 'blue',
-  highlightTextColor: 'black',
-  sections: [{
-    title: 'First section',
-    items: [{
-      title: 'First Item',
-      subtitle: 'Some subtitle',
-      icon: 'images/item_icon.png'
-    }, {
-      title: 'Second item'
-    }]
-  }]
-});
-````
-
-#### Menu.section(sectionIndex, section)
-
-Define the section to be displayed at `sectionIndex`. See [Menu] for the properties of a section.
-
-````js
-var section = {
-  title: 'Another section',
-  items: [{
-    title: 'With one item'
-  }]
-};
-menu.section(1, section);
-````
-
-When called with no `section`, returns the section at the given `sectionIndex`.
-
-#### Menu.items(sectionIndex, items)
-
-Define the items to display in a specific section. See [Menu] for the properties of an item.
-
-````js
-menu.items(0, [ { title: 'new item1' }, { title: 'new item2' } ]);
-````
-
-Whell called with no `items`, returns the items of the section at the given `sectionIndex`.
-
-#### Menu.item(sectionIndex, itemIndex, item)
-
-Define the item to display at index `itemIndex` in section `sectionIndex`. See [Menu] for the properties of an item.
-
-````js
-menu.item(0, 0, { title: 'A new item', subtitle: 'replacing the previous one' });
-````
-
-When called with no `item`, returns the item at the given `sectionIndex` and `itemIndex`.
-
-<a id="menu-on-select-callback"></a>
-#### Menu.on('select', callback)
-[Menu.on('select', callback)]: #menu-on-select-callback
-
-Registers a callback called when an item in the menu is selected. The callback function will be passed an event with the following fields:
-
-* `menu`: The menu object.
-* `section`: The menu section object.
-* `sectionIndex`: The section index of the section of the selected item.
-* `item`: The menu item object.
-* `itemIndex`: The item index of the selected item.
-
-**Note:** You can also register a callback for 'longSelect' event, triggered when the user long clicks on an item.
-
-````js
-menu.on('select', function(e) {
-  console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
-  console.log('The item is titled "' + e.item.title + '"');
-});
-````
-
-#### Menu.on('longSelect', callback)
-
-Similar to the select callback, except for long select presses. See [Menu.on('select', callback)].
-
-## A Window or type of Window can have elements
+## 2. A Window can have Elements
 
 ### Element
 
-There are four types of [Element] that can be instantiated at the moment: [Circle], [Image], [Rect] and [Text].
+There are 4 types of [Element] that can be instantiated at the moment: **[Circle]**, **[Image]**, **[Rect]** and **[Text]**.
 
 They all share some common properties:
 
@@ -323,8 +196,17 @@ All properties can be initialized by passing an object when creating the Element
 
 ````js
 var Vector2 = require('vector2');
-var element = new Text({ position: new Vector2(0, 0), size: new Vector2(144, 168) });
+
+// passing an object when creating the Element
+var element = new Text({ 
+  position: new Vector2(0, 0), 
+  size: new Vector2(144, 168) 
+});
+
+// change/add properties with accessors functions who have the name of the properties
 element.borderColor('white');
+
+// Calling an accessor without a parameter will return the current value.
 console.log('This element background color is: ' + element.backgroundColor());
 ````
 
